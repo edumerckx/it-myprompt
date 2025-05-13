@@ -1,0 +1,56 @@
+[project]
+name = "it-myprompt"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Eduardo Gomes",email = "edu_merckx@yahoo.com.br"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "fastapi[standard] (>=0.115.12,<0.116.0)",
+    "sqlalchemy[asyncio] (>=2.0.40,<3.0.0)",
+    "alembic (>=1.15.2,<2.0.0)",
+    "pydantic-settings (>=2.9.1,<3.0.0)",
+    "pydantic (>=2.11.4,<3.0.0)",
+    "pwdlib[argon2] (>=0.2.1,<0.3.0)",
+    "pyjwt (>=2.10.1,<3.0.0)",
+    "psycopg[binary] (>=3.2.8,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.14.1"
+ruff = "^0.11.9"
+pytest = "^8.3.5"
+pytest-cov = "^6.1.1"
+
+[tool.ruff]
+line-length = 80
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['FAST', 'I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = '.'
+addopts = '-p no:warnings'
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.taskipy.tasks]
+lint = 'ruff check .; ruff check . --diff'
+format = 'ruff check . --fix; ruff format .'
+dev = 'fastapi dev it_myprompt/app.py'
+pre_test = 'task format'
+test = 'pytest -s -x --cov=it_myprompt -vv'
+post_test = 'coverage html'
+
