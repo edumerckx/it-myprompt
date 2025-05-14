@@ -8,12 +8,15 @@ from langchain_openai import ChatOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession as AsyncSessionORM
 
 from it_myprompt.database import get_session
+from it_myprompt.logger import get_logger
 from it_myprompt.models import Chat, User
 from it_myprompt.schemas.chat import ChatResponse, ChatSchema
 from it_myprompt.security import get_user
 from it_myprompt.services.openrouter import get_llm
+from it_myprompt.settings import Settings
 
 router = APIRouter(prefix='/chat', tags=['chat'])
+logger = get_logger(Settings().LOGGER_LEVEL)
 AsyncSession = Annotated[AsyncSessionORM, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_user)]
 LLM = Annotated[ChatOpenAI, Depends(get_llm)]
@@ -38,10 +41,8 @@ async def create_chat(
     try:
         response = await chain.ainvoke({'prompt': chat.prompt})
     except Exception as e:
-        raise HTTPException(
-            status_code=HTTPStatus.SERVICE_UNAVAILABLE,
-            detail=str(e),
-        )
+        logger.error(e)
+        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR)
 
     new_chat = Chat(
         user_id=current_user.id,

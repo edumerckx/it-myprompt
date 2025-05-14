@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     SECRET_KEY: str
     ALGORITHM: str
+    LOGGER_LEVEL: str
     model_config = SettingsConfigDict(
         env_file='.env',
         env_file_encoding='utf-8',
