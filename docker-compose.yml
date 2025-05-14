@@ -1,0 +1,39 @@
+services:
+  itmyprompt_db:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_DB=itmyprompt
+      - POSTGRES_PASSWORD=pass
+    ports:
+      - 5432:5432
+      
+  itmyprompt_app:
+    image: itmyprompt
+    entrypoint: ./entrypoint.sh
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - itmyprompt_db
+    environment:
+      - DATABASE_URL=postgresql+psycopg://user:pass@itmyprompt_db/itmyprompt
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_API_URL=${OPENROUTER_API_URL}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - LOGGER_LEVEL=${LOGGER_LEVEL}
+      - LANGSMITH_TRACING=${LANGSMITH_TRACING}
+      - LANGSMITH_ENDPOINT=${LANGSMITH_ENDPOINT}
+      - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - LANGSMITH_PROJECT=${LANGSMITH_PROJECT}
+    env_file:
+      - ./.env
+
+volumes:
+  pgdata: 
+    
