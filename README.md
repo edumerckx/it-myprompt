@@ -7,6 +7,7 @@ API _restful_ para chat integrado com llm. Possui recurso para criação de usu�
 - [FastAPI](https://fastapi.tiangolo.com/) 
 - [PostgreSQL](https://www.postgresql.org/)
 - [Langchain](https://www.langchain.com/)
+- [OpenRouter](https://openrouter.ai/)
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [Docker](https://www.docker.com/)
 - [Poetry](https://python-poetry.org/) 
@@ -18,8 +19,26 @@ Esboço de implementação na AWS está no [arquivo de arquitetura](ARQUITETURA.
 
 ## Como executar a aplicação
 
-Embora a aplicação possa ser executada localmente, recomenda-se a utilização do _docker-compose_
+Embora a aplicação possa ser executada localmente, recomenda-se a utilização do _docker-compose_. É necessário uma _api key_ da **OpenRouter**
 
+#### Variáveis de ambiente
+```
+OPENROUTER_API_KEY - api key fornecida pelo openrouter
+OPENROUTER_API_URL - https://openrouter.ai/api/v1
+OPENROUTER_MODEL - gpt-3.5-turbo
+ACCESS_TOKEN_EXPIRE_MINUTES - 60
+SECRET_KEY - secret que será utilizado no processo de autenticação
+ALGORITHM - HS256
+DATABASE_URL - postgresql+psycopg://<user>:<pass>@localhost:5432/<db> # alterar conforme instalação local
+LOGGER_LEVEL - INFO
+
+# a configuração de tracing abaixo é opcional
+LANGSMITH_TRACING - true # habilita o tracing - se 'true' as demais deverão ser preenchidas
+LANGSMITH_ENDPOINT - "https://api.smith.langchain.com"
+LANGSMITH_API_KEY - api key gerada no site langsmith 
+LANGSMITH_PROJECT - nome do projeto criado junto com o api key
+
+```
 
 #### Docker-compose
 
