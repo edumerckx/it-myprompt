@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session as SessionORM
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from it_myprompt.database import get_session
 from it_myprompt.models import User
@@ -12,7 +12,7 @@ from it_myprompt.security import get_hash, get_user
 
 router = APIRouter(prefix='/users', tags=['users'])
 
-Session = Annotated[SessionORM, Depends(get_session)]
+Session = Annotated[AsyncSession, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_user)]
 
 

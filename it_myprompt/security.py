@@ -53,7 +53,11 @@ async def get_user(token: OAuth2Scheme, session: Session):
     except DecodeError:
         raise credentials_exception
     except ExpiredSignatureError:
-        raise credentials_exception
+        raise HTTPException(
+            status_code=HTTPStatus.UNAUTHORIZED,
+            detail='Expired Token',
+            headers={'WWW-Authenticate': 'Bearer'},
+        )
 
     user = await session.scalar(select(User).where(User.email == email))
 
